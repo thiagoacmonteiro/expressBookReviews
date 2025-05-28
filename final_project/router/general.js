@@ -18,9 +18,29 @@ public_users.post("/register", (req, res) => {
   return res.status(200).json({ message: "User successfully created" });
 });
 
+async function getAllBooks() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const success = Math.random() > 0.3;
+
+      if (success) {
+        resolve(books);
+      } else {
+        reject(new Error("Error getting books"));
+      }
+    }, 3000);
+  });
+}
+
 // Get the book list available in the shop
-public_users.get("/", function (_req, res) {
-  return res.status(200).json(JSON.stringify(books));
+public_users.get("/", async function (_req, res) {
+  try {
+    const allBooks = await getAllBooks();
+
+    return res.status(200).json(allBooks);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // Get book details based on ISBN
