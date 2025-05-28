@@ -54,7 +54,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const booksEntries = Object.entries(books);
 
   const foundEntry = booksEntries.find((item) => item[1].isbn === isbn);
-  console.log("FOUND ENTRY", foundEntry);
 
   if (foundEntry) {
     books[foundEntry[0]].reviews = {
@@ -63,6 +62,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     };
 
     return res.status(201).json({ message: "Review successfully added" });
+  }
+
+  return res.status(400).json({ message: "Book not found by given isbn" });
+});
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+  const { isbn } = req.params;
+  const { username } = req.session.authorization;
+
+  const booksEntries = Object.entries(books);
+
+  const foundEntry = booksEntries.find((item) => item[1].isbn === isbn);
+
+  if (foundEntry) {
+    delete books[foundEntry[0]].reviews[username];
+
+    return res.status(201).json({ message: "Review successfully deleted" });
   }
 
   return res.status(400).json({ message: "Book not found by given isbn" });

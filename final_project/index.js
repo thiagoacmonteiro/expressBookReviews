@@ -18,7 +18,6 @@ app.use(
 );
 
 app.use("/customer/auth/*", function auth(req, res, next) {
-  console.log("AQUIIIIIIIII");
   if (req.session.authorization) {
     let token = req.session.authorization["accessToken"];
 
